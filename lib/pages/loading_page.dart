@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:weather_app/services/location.dart';
 
 class LoadingPage extends StatefulWidget {
   @override
@@ -7,36 +7,40 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
-  Position? _currentPosition;
+  double? currentLatitude;
+  double? currentLongitude;
 
   void initState() {
     super.initState();
-    getLocation().then((Position position) => setState(() {
-          _currentPosition = position;
-        }));
+    getLocation();
+    // getLocation().then((Position position) => setState(() {
+    //       _currentPosition = position;
+    //     }));
   }
 
-  _getCurrentLocation() {
-    Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.best,
-            forceAndroidLocationManager: true)
-        .then((Position position) {
-      setState(() {
-        _currentPosition = position;
-      });
-    }).catchError((e) {
-      print(e);
-    });
+  void getLocation() async {
+    Location location = Location();
+    await location.getCurrentLocation();
+    currentLatitude = location.latitude;
+    currentLongitude = location.longitude;
+
+    print(location.latitude);
+    print(location.longitude);
   }
 
-  Future<Position> getLocation() async {
-    Position position = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.low,
-            forceAndroidLocationManager: true)
-        .timeout(Duration(seconds: 10));
-    // print('$position.altitude, $position.latitude');
-    return position;
-  }
+  //
+  // _getCurrentLocation() {
+  //   Geolocator.getCurrentPosition(
+  //           desiredAccuracy: LocationAccuracy.best,
+  //           forceAndroidLocationManager: true)
+  //       .then((Position position) {
+  //     setState(() {
+  //       _currentPosition = position;
+  //     });
+  //   }).catchError((e) {
+  //     print(e);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -45,14 +49,14 @@ class _LoadingPageState extends State<LoadingPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (_currentPosition != null)
-              Text(
-                  "LAT: ${_currentPosition?.latitude}, LNG: ${_currentPosition?.longitude}"),
+            if ((currentLatitude != null) && (currentLongitude != null))
+              Text("LAT: $currentLatitude, LNG: $currentLongitude"),
             ElevatedButton(
-              onPressed: () async {
-                await getLocation().then((Position position) => setState(() {
-                      _currentPosition = position;
-                    }));
+              onPressed: () {
+                //        async {
+                //   await getLocation().then((Position position) => setState(() {
+                //         _currentPosition = position;
+                //       }));
                 // var myres = await getLocation();
                 // print(myres);
                 // String result = await testAsync();
