@@ -9,6 +9,10 @@ class Networking {
   Future<dynamic> getWeatherData() async {
     http.Response response = await http.get(apiURL);
 
-    return jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      print(response.statusCode);
+    }
   }
 }
