@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/services/location.dart';
+import 'package:weather_app/services/weather.dart';
+import 'package:weather_app/pages/city_result_page.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:weather_app/utilities/textstyling.dart';
 
 class LoadingPage extends StatefulWidget {
   @override
@@ -7,40 +10,20 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
-  double? currentLatitude;
-  double? currentLongitude;
-
+  @override
   void initState() {
     super.initState();
-    getLocation();
-    // getLocation().then((Position position) => setState(() {
-    //       _currentPosition = position;
-    //     }));
+    getLocationData();
   }
 
-  void getLocation() async {
-    Location location = Location();
-    await location.getCurrentLocation();
-    currentLatitude = location.latitude;
-    currentLongitude = location.longitude;
-
-    print(location.latitude);
-    print(location.longitude);
+  void getLocationData() async {
+    var weatherData;
+    WeatherModel weatherModel = WeatherModel();
+    weatherData = await weatherModel.getWeatherData();
+    print('in loading page $weatherData');
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => CityResultPage(weatherData)));
   }
-
-  //
-  // _getCurrentLocation() {
-  //   Geolocator.getCurrentPosition(
-  //           desiredAccuracy: LocationAccuracy.best,
-  //           forceAndroidLocationManager: true)
-  //       .then((Position position) {
-  //     setState(() {
-  //       _currentPosition = position;
-  //     });
-  //   }).catchError((e) {
-  //     print(e);
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -48,23 +31,30 @@ class _LoadingPageState extends State<LoadingPage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if ((currentLatitude != null) && (currentLongitude != null))
-              Text("LAT: $currentLatitude, LNG: $currentLongitude"),
-            ElevatedButton(
-              onPressed: () {
-                //        async {
-                //   await getLocation().then((Position position) => setState(() {
-                //         _currentPosition = position;
-                //       }));
-                // var myres = await getLocation();
-                // print(myres);
-                // String result = await testAsync();
-                // _getCurrentLocation();
-                // print(result);
-                // print(pos);
+            SpinKitChasingDots(
+              itemBuilder: (BuildContext context, int index) {
+                return DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: index.isEven ? Color(0xffededed) : Color(0xffababab),
+                    shape: BoxShape.circle,
+                  ),
+                );
               },
-              child: Text('Get Location'),
+              size: 80.0,
+              duration: Duration(milliseconds: 1500),
+            ),
+            SizedBox(
+              height: 20.0,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                'Gathering weather data information...',
+                textAlign: TextAlign.center,
+                style: loadingPageTextStyle,
+              ),
             ),
           ],
         ),
