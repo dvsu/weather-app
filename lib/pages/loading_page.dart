@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:weather_app/services/location.dart';
+import 'package:weather_app/services/networking.dart';
+import 'dart:convert';
+import 'package:weather_app/access/keys.dart';
 
 class LoadingPage extends StatefulWidget {
   @override
@@ -7,35 +10,37 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
-  Position? _currentPosition;
+  double? latitude;
+  double? longitude;
 
+  @override
   void initState() {
     super.initState();
-    getLocation().then((Position position) => setState(() {
-          _currentPosition = position;
-        }));
+    getLocationData();
   }
 
-  _getCurrentLocation() {
-    Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.best,
-            forceAndroidLocationManager: true)
-        .then((Position position) {
-      setState(() {
-        _currentPosition = position;
-      });
-    }).catchError((e) {
-      print(e);
+  void getLocationData() async {
+    Location location = Location();
+    await location.getCurrentLocation();
+    latitude = location.latitude;
+    longitude = location.longitude;
+
+    var url = Uri.https('api.openweathermap.org', '/data/2.5/weather', {
+      'lat': latitude?.toStringAsFixed(3),
+      'lon': longitude?.toStringAsFixed(3),
+      'appid': weatherAPIKey
     });
-  }
 
-  Future<Position> getLocation() async {
-    Position position = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.low,
-            forceAndroidLocationManager: true)
-        .timeout(Duration(seconds: 10));
-    // print('$position.altitude, $position.latitude');
-    return position;
+    Networking networking = Networking(apiURL: url);
+
+    var weatherData = await networking.getWeatherData();
+    print(weatherData);
+
+    // double currentTemp = weatherData['main']['temp'] - 273.15;
+    // String cityName = weatherData['name'];
+    // int weatherID = weatherData['weather'][0]['id'];
+    // print(
+    //     '$cityName, ${currentTemp.toStringAsFixed(2)}, ${weatherID.toString()}');
   }
 
   @override
@@ -45,23 +50,18 @@ class _LoadingPageState extends State<LoadingPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (_currentPosition != null)
-              Text(
-                  "LAT: ${_currentPosition?.latitude}, LNG: ${_currentPosition?.longitude}"),
-            ElevatedButton(
-              onPressed: () async {
-                await getLocation().then((Position position) => setState(() {
-                      _currentPosition = position;
-                    }));
-                // var myres = await getLocation();
-                // print(myres);
-                // String result = await testAsync();
-                // _getCurrentLocation();
-                // print(result);
-                // print(pos);
-              },
-              child: Text('Get Location'),
-            ),
+            if ((latitude != null) && (longitude != null))
+              Text("LAT: $latitude, LNG: $longitude"),
+            // ElevatedButton(
+            //   onPressed: () async {
+            //     await getLocation().then(
+            //       (Position position) => setState(() {
+            //         _currentPosition = position;
+            //       }),
+            //     );
+            //   },
+            //   child: Text('Get Location'),
+            // ),
           ],
         ),
       ),

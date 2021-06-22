@@ -44,3 +44,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# File storing API keys and other sensitive data
+lib/access/keys.dart
