@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/utilities/textstyling.dart';
+import 'package:weather_app/widgets/main_temp_widget.dart';
 
 class CityResultPage extends StatefulWidget {
   final locationWeather;
@@ -12,13 +13,13 @@ class CityResultPage extends StatefulWidget {
 }
 
 class _CityResultPageState extends State<CityResultPage> {
-  double? currentTemp;
-  double? minTemp;
-  double? maxTemp;
-  double? feelTemp;
-  String? cityName;
-  String? countryName;
-  int? weatherID;
+  double currentTemp = 0.0;
+  double minTemp = 0.0;
+  double maxTemp = 0.0;
+  double feelTemp = 0.0;
+  String cityName = '';
+  String countryName = '';
+  int weatherID = 0;
 
   @override
   void initState() {
@@ -82,113 +83,13 @@ class _CityResultPageState extends State<CityResultPage> {
               ),
               Expanded(
                 flex: 7,
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Color(0x35000000),
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(
-                        children: <Widget>[
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              '$cityName, $countryName',
-                              style: locationTextStyle,
-                            ),
-                          ),
-                          Expanded(
-                            flex: 3,
-                            child: Padding(
-                              padding:
-                                  EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 10.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    '${currentTemp?.toStringAsFixed(1)}',
-                                    style: mainTempTextStyle,
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Expanded(
-                                        flex: 1,
-                                        child: Container(),
-                                      ),
-                                      Expanded(
-                                        flex: 4,
-                                        child: Text(
-                                          '°C',
-                                          style: mainTempUnitTextStyle,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: Container(),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  Column(
-                                    children: <Widget>[
-                                      Text(
-                                        'Min ',
-                                        style: subTempNameTextStyle,
-                                      ),
-                                      Text(
-                                        '${minTemp?.toStringAsFixed(1)}°C',
-                                        style: subTempValueTextStyle,
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    children: <Widget>[
-                                      Text(
-                                        'Feels like ',
-                                        style: subTempNameTextStyle,
-                                      ),
-                                      Text(
-                                        '${feelTemp?.toStringAsFixed(1)}°C',
-                                        style: subTempValueTextStyle,
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    children: <Widget>[
-                                      Text(
-                                        'Max ',
-                                        style: subTempNameTextStyle,
-                                      ),
-                                      Text(
-                                        '${maxTemp?.toStringAsFixed(1)}°C',
-                                        style: subTempValueTextStyle,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                child: MainTempWidget(
+                    cityName: cityName,
+                    countryName: countryName,
+                    currentTemp: currentTemp,
+                    minTemp: minTemp,
+                    feelTemp: feelTemp,
+                    maxTemp: maxTemp),
               ),
               Expanded(
                 flex: 4,
@@ -200,7 +101,7 @@ class _CityResultPageState extends State<CityResultPage> {
                   padding: EdgeInsets.only(right: 10.0),
                   child: Text(
                     "It's sunny in $cityName",
-                    textAlign: TextAlign.right,
+                    textAlign: TextAlign.center,
                     style: kMessageTextStyle,
                   ),
                 ),
