@@ -24,6 +24,7 @@ class _CityResultPageState extends State<CityResultPage> {
   int weatherID = 0;
   String weatherIcon = '';
   String weatherMessage = '';
+  bool locationDisabled = false;
 
   @override
   void initState() {
@@ -33,6 +34,11 @@ class _CityResultPageState extends State<CityResultPage> {
 
   void updateUIData(dynamic weatherData) {
     setState(() {
+      if (weatherData == null) {
+        locationDisabled = true;
+        return;
+      }
+      locationDisabled = false;
       currentTemp = weatherData['main']['temp'];
       feelTemp = weatherData['main']['feels_like'];
       minTemp = weatherData['main']['temp_min'];
@@ -65,7 +71,7 @@ class _CityResultPageState extends State<CityResultPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Expanded(
-                flex: 1,
+                flex: 2,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -89,7 +95,7 @@ class _CityResultPageState extends State<CityResultPage> {
                 ),
               ),
               Expanded(
-                flex: 7,
+                flex: 8,
                 child: MainTempWidgetLarge(
                     cityName: cityName,
                     countryName: countryName,
@@ -99,21 +105,27 @@ class _CityResultPageState extends State<CityResultPage> {
                     maxTemp: maxTemp),
               ),
               Expanded(
-                flex: 4,
+                flex: 5,
                 child: TempWidgetMedium(
                   widgetTitle: '6-day Forecast',
                   widgetContent: Text(''),
                 ),
               ),
               Expanded(
-                flex: 4,
+                flex: 5,
                 child: TempWidgetMedium(
                   widgetTitle: 'Quick Insights',
-                  widgetContent: Text(
-                    "It's $weatherIcon in $cityName\n$weatherMessage",
-                    textAlign: TextAlign.center,
-                    style: weatherInsightsTextStyle,
-                  ),
+                  widgetContent: (locationDisabled)
+                      ? Text(
+                          "It's $weatherIcon in $cityName\n$weatherMessage",
+                          textAlign: TextAlign.center,
+                          style: weatherInsightsTextStyle,
+                        )
+                      : Text(
+                          "Unable to fetch weather data\nEnsure the GPS is on.",
+                          textAlign: TextAlign.center,
+                          style: weatherInsightsTextStyle,
+                        ),
                 ),
               ),
             ],

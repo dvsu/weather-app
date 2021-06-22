@@ -9,9 +9,13 @@ class WeatherModel {
     double? latitude = location.latitude;
     double? longitude = location.longitude;
 
+    if (latitude == null || longitude == null) {
+      return null;
+    }
+
     var url = Uri.https('api.openweathermap.org', '/data/2.5/weather', {
-      'lat': latitude?.toStringAsFixed(4),
-      'lon': longitude?.toStringAsFixed(4),
+      'lat': latitude.toStringAsFixed(4),
+      'lon': longitude.toStringAsFixed(4),
       'units': 'metric',
       'appid': weatherAPIKey
     });
