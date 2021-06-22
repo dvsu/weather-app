@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/utilities/textstyling.dart';
-import 'package:weather_app/widgets/main_temp_widget.dart';
+import 'package:weather_app/widgets/temp_widget.dart';
+import 'package:weather_app/services/weather.dart';
 
 class CityResultPage extends StatefulWidget {
   final locationWeather;
@@ -13,6 +14,7 @@ class CityResultPage extends StatefulWidget {
 }
 
 class _CityResultPageState extends State<CityResultPage> {
+  WeatherModel weatherModel = WeatherModel();
   double currentTemp = 0.0;
   double minTemp = 0.0;
   double maxTemp = 0.0;
@@ -20,6 +22,8 @@ class _CityResultPageState extends State<CityResultPage> {
   String cityName = '';
   String countryName = '';
   int weatherID = 0;
+  String weatherIcon = '';
+  String weatherMessage = '';
 
   @override
   void initState() {
@@ -28,14 +32,18 @@ class _CityResultPageState extends State<CityResultPage> {
   }
 
   void updateUIData(dynamic weatherData) {
-    currentTemp = weatherData['main']['temp'];
-    feelTemp = weatherData['main']['feels_like'];
-    minTemp = weatherData['main']['temp_min'];
-    maxTemp = weatherData['main']['temp_max'];
-    currentTemp = weatherData['main']['temp'];
-    cityName = weatherData['name'];
-    countryName = weatherData['sys']['country'];
-    weatherID = weatherData['weather'][0]['id'];
+    setState(() {
+      currentTemp = weatherData['main']['temp'];
+      feelTemp = weatherData['main']['feels_like'];
+      minTemp = weatherData['main']['temp_min'];
+      maxTemp = weatherData['main']['temp_max'];
+      currentTemp = weatherData['main']['temp'];
+      cityName = weatherData['name'];
+      countryName = weatherData['sys']['country'];
+      weatherID = weatherData['weather'][0]['id'];
+      weatherIcon = weatherModel.getWeatherIcon(weatherID);
+      weatherMessage = weatherModel.getMessage(currentTemp.toInt());
+    });
   }
 
   @override
@@ -54,6 +62,7 @@ class _CityResultPageState extends State<CityResultPage> {
         child: SafeArea(
           child: Column(
             //mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Expanded(
                 flex: 1,
@@ -78,12 +87,8 @@ class _CityResultPageState extends State<CityResultPage> {
                 ),
               ),
               Expanded(
-                flex: 1,
-                child: Container(),
-              ),
-              Expanded(
                 flex: 7,
-                child: MainTempWidget(
+                child: MainTempWidgetLarge(
                     cityName: cityName,
                     countryName: countryName,
                     currentTemp: currentTemp,
@@ -93,16 +98,19 @@ class _CityResultPageState extends State<CityResultPage> {
               ),
               Expanded(
                 flex: 4,
-                child: Container(),
+                child: TempWidgetMedium(
+                  widgetTitle: '6-day Forecast',
+                  widgetContent: Text(''),
+                ),
               ),
               Expanded(
                 flex: 4,
-                child: Padding(
-                  padding: EdgeInsets.only(right: 10.0),
-                  child: Text(
-                    "It's sunny in $cityName",
+                child: TempWidgetMedium(
+                  widgetTitle: 'Quick Insights',
+                  widgetContent: Text(
+                    "It's $weatherIcon in $cityName\n$weatherMessage",
                     textAlign: TextAlign.center,
-                    style: kMessageTextStyle,
+                    style: weatherInsightsTextStyle,
                   ),
                 ),
               ),

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/utilities/textstyling.dart';
+import 'package:weather_app/utilities/color_palette.dart';
 
-class MainTempWidget extends StatelessWidget {
-  const MainTempWidget({
+class MainTempWidgetLarge extends StatelessWidget {
+  const MainTempWidgetLarge({
     required this.cityName,
     required this.countryName,
     required this.currentTemp,
@@ -21,14 +22,14 @@ class MainTempWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
       child: Container(
         decoration: BoxDecoration(
-          color: Color(0x35000000),
+          color: widgetBackgroundColor,
           borderRadius: BorderRadius.circular(20.0),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(17.0),
           child: Column(
             children: <Widget>[
               Expanded(
@@ -123,6 +124,54 @@ class SubTempWidget extends StatelessWidget {
           style: subTempValueTextStyle,
         ),
       ],
+    );
+  }
+}
+
+class TempWidgetMedium extends StatelessWidget {
+  const TempWidgetMedium(
+      {required this.widgetTitle, required this.widgetContent});
+
+  final String widgetTitle;
+  final Widget widgetContent;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+      child: Container(
+        decoration: BoxDecoration(
+            color: widgetBackgroundColor,
+            borderRadius: BorderRadius.circular(10.0)),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            children: [
+              Expanded(
+                  flex: 3,
+                  child: Center(
+                    child: Text(
+                      widgetTitle,
+                      style: widgetTitleTextStyle,
+                    ),
+                  )),
+              Expanded(
+                flex: 1,
+                child: Divider(
+                  thickness: 2.0,
+                  color: widgetDividerColor,
+                ),
+              ),
+              Expanded(
+                flex: 8,
+                child: Center(
+                  child: widgetContent,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

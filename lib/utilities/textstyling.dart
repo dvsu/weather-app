@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 const locationTextStyle = TextStyle(
   fontFamily: 'Rubik',
-  fontWeight: FontWeight.w400,
-  fontSize: 25.0,
+  fontWeight: FontWeight.w500,
+  fontSize: 20.0,
 );
 
 const mainTempTextStyle = TextStyle(
@@ -36,9 +36,15 @@ const subTempUnitTextStyle = TextStyle(
   fontSize: 15.0,
 );
 
-const kMessageTextStyle = TextStyle(
+const widgetTitleTextStyle = TextStyle(
+  fontSize: 17.0,
   fontFamily: 'Rubik',
-  fontSize: 50.0,
+  fontWeight: FontWeight.w500,
+);
+
+const weatherInsightsTextStyle = TextStyle(
+  fontFamily: 'Rubik',
+  fontSize: 22.0,
 );
 
 const kButtonTextStyle = TextStyle(

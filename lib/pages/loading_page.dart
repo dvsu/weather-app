@@ -12,9 +12,6 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
-  double? latitude;
-  double? longitude;
-
   @override
   void initState() {
     super.initState();
@@ -24,8 +21,8 @@ class _LoadingPageState extends State<LoadingPage> {
   void getLocationData() async {
     Location location = Location();
     await location.getCurrentLocation();
-    latitude = location.latitude;
-    longitude = location.longitude;
+    double? latitude = location.latitude;
+    double? longitude = location.longitude;
 
     var url = Uri.https('api.openweathermap.org', '/data/2.5/weather', {
       'lat': latitude?.toStringAsFixed(4),
