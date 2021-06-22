@@ -47,9 +47,10 @@ const weatherInsightsTextStyle = TextStyle(
   fontSize: 22.0,
 );
 
-const kButtonTextStyle = TextStyle(
-  fontSize: 30.0,
+const buttonTextStyle = TextStyle(
+  fontSize: 20.0,
   fontFamily: 'Rubik',
+  fontWeight: FontWeight.w400,
 );
 
 const kConditionTextStyle = TextStyle(

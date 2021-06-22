@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/utilities/color_palette.dart';
 import 'package:weather_app/utilities/textstyling.dart';
 
-class CityScreen extends StatefulWidget {
+class CitySelectionPage extends StatefulWidget {
   @override
-  _CityScreenState createState() => _CityScreenState();
+  _CitySelectionPageState createState() => _CitySelectionPageState();
 }
 
-class _CityScreenState extends State<CityScreen> {
+class _CitySelectionPageState extends State<CitySelectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('images/city_background.jpg'),
+            image: AssetImage('images/selection_background.jpg'),
             fit: BoxFit.cover,
           ),
         ),
@@ -21,26 +22,104 @@ class _CityScreenState extends State<CityScreen> {
         child: SafeArea(
           child: Column(
             children: <Widget>[
-              Align(
-                alignment: Alignment.topLeft,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  child: Icon(
-                    Icons.arrow_back_ios,
-                    size: 50.0,
+              Expanded(
+                flex: 2,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 0.0,
+                          vertical: 5.0,
+                        ),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {},
+                            child: Icon(
+                              Icons.arrow_back,
+                              size: 30.0,
+                            ),
+                            style: ButtonStyle(
+                              alignment: Alignment.center,
+                              backgroundColor: MaterialStateProperty.all(
+                                  buttonBackgroundColor),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(20.0),
+                                    bottomRight: Radius.circular(20.0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 4,
+                      child: Container(),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: Container(
+                  padding: EdgeInsets.all(20.0),
+                  child: TextField(
+                    style: TextStyle(
+                      color: textFieldTextColor,
+                      fontFamily: 'Rubik',
+                    ),
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: textFieldBackgroundColor,
+                      icon: Icon(
+                        Icons.location_city,
+                        color: Colors.white,
+                      ),
+                      hintText: 'Enter city name',
+                      hintStyle: TextStyle(
+                        color: Colors.grey,
+                        fontFamily: 'Rubik',
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    onChanged: (val) {},
                   ),
                 ),
               ),
-              Container(
-                padding: EdgeInsets.all(20.0),
-                child: null,
-              ),
-              ElevatedButton(
-                onPressed: () {},
-                child: Text(
-                  'Get Weather',
-                  style: kButtonTextStyle,
+              Expanded(
+                flex: 2,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: Text(
+                    'Get Weather',
+                    style: buttonTextStyle,
+                  ),
+                  style: ButtonStyle(
+                    alignment: Alignment.center,
+                    backgroundColor:
+                        MaterialStateProperty.all(buttonBackgroundColor),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                    ),
+                  ),
                 ),
+              ),
+              Expanded(
+                flex: 12,
+                child: Container(),
               ),
             ],
           ),

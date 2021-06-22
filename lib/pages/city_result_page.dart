@@ -4,6 +4,7 @@ import 'package:weather_app/utilities/color_palette.dart';
 import 'package:weather_app/utilities/textstyling.dart';
 import 'package:weather_app/widgets/temp_widget.dart';
 import 'package:weather_app/services/weather.dart';
+import 'package:weather_app/pages/city_selection_page.dart';
 
 class CityResultPage extends StatefulWidget {
   final locationWeather;
@@ -129,7 +130,14 @@ class _CityResultPageState extends State<CityResultPage> {
                           width: double.infinity,
                           height: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CitySelectionPage(),
+                                ),
+                              );
+                            },
                             child: Icon(
                               Icons.location_city,
                               size: 30.0,
