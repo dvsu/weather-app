@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/services/weather.dart';
 import 'package:weather_app/pages/city_result_page.dart';
-import 'package:weather_app/services/location.dart';
-import 'package:weather_app/services/networking.dart';
-import 'package:weather_app/access/keys.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:weather_app/utilities/textstyling.dart';
 
@@ -19,22 +17,9 @@ class _LoadingPageState extends State<LoadingPage> {
   }
 
   void getLocationData() async {
-    Location location = Location();
-    await location.getCurrentLocation();
-    double? latitude = location.latitude;
-    double? longitude = location.longitude;
-
-    var url = Uri.https('api.openweathermap.org', '/data/2.5/weather', {
-      'lat': latitude?.toStringAsFixed(4),
-      'lon': longitude?.toStringAsFixed(4),
-      'units': 'metric',
-      'appid': weatherAPIKey
-    });
-
-    Networking networking = Networking(apiURL: url);
-
-    var weatherData = await networking.getWeatherData();
-
+    var weatherData;
+    WeatherModel weatherModel = WeatherModel();
+    weatherData = await weatherModel.getWeatherData();
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => CityResultPage(weatherData)));
   }

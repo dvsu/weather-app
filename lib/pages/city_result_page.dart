@@ -70,7 +70,9 @@ class _CityResultPageState extends State<CityResultPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        updateUIData(await weatherModel.getWeatherData());
+                      },
                       child: Icon(
                         Icons.near_me,
                         size: 50.0,
