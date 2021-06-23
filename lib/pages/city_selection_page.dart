@@ -35,7 +35,9 @@ class _CitySelectionPageState extends State<CitySelectionPage> {
                         vertical: 5.0,
                       ),
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                         child: Icon(
                           Icons.arrow_back,
                           size: 30.0,
