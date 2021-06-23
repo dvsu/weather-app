@@ -19,7 +19,7 @@ class _LoadingPageState extends State<LoadingPage> {
   void getLocationData() async {
     var weatherData;
     WeatherModel weatherModel = WeatherModel();
-    weatherData = await weatherModel.getWeatherData();
+    weatherData = await weatherModel.getWeatherDataByLocation();
     print('in loading page $weatherData');
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => CityResultPage(weatherData)));

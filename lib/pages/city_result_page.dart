@@ -17,17 +17,18 @@ class CityResultPage extends StatefulWidget {
 
 class _CityResultPageState extends State<CityResultPage> {
   WeatherModel weatherModel = WeatherModel();
-  double currentTemp = 0.0;
-  double minTemp = 0.0;
-  double maxTemp = 0.0;
-  double feelTemp = 0.0;
-  double humidity = 0.0;
-  String cityName = '';
-  String countryName = '';
+  double? currentTemp;
+  double? minTemp;
+  double? maxTemp;
+  double? feelTemp;
+  double? humidity;
+  String? cityName;
+  String? countryName;
   int weatherID = 0;
-  String weatherIcon = '';
-  String weatherMessage = '';
+  String? weatherIcon;
+  String? weatherMessage;
   bool locationDisabled = false;
+  bool wrongCityName = false;
   String weatherImage = 'images/default.jpg';
 
   @override
@@ -38,22 +39,40 @@ class _CityResultPageState extends State<CityResultPage> {
 
   void updateUIData(dynamic weatherData) {
     setState(() {
+      print(weatherData);
       if (weatherData == null) {
         locationDisabled = true;
         return;
+      } else if (weatherData == '') {
+        wrongCityName = true;
+        print("wrong city");
+        currentTemp = null;
+        feelTemp = null;
+        minTemp = null;
+        maxTemp = null;
+        humidity = null;
+        cityName = null;
+        countryName = null;
+        weatherID = 0;
+        weatherIcon = weatherModel.getWeatherIcon(0);
+        weatherImage = weatherModel.getWeatherImage(0);
+        weatherMessage = weatherModel.getMessage(null);
+        return;
+      } else {
+        locationDisabled = false;
+        wrongCityName = false;
       }
-      locationDisabled = false;
       currentTemp = weatherData['main']['temp'].toDouble();
       feelTemp = weatherData['main']['feels_like'].toDouble();
       minTemp = weatherData['main']['temp_min'].toDouble();
       maxTemp = weatherData['main']['temp_max'].toDouble();
       humidity = weatherData['main']['humidity'].toDouble();
-      cityName = weatherData['name'] ?? '';
-      countryName = weatherData['sys']['country'] ?? '';
+      cityName = weatherData['name'];
+      countryName = weatherData['sys']['country'];
       weatherID = weatherData['weather'][0]['id'];
       weatherIcon = weatherModel.getWeatherIcon(weatherID);
       weatherImage = weatherModel.getWeatherImage(weatherID);
-      weatherMessage = weatherModel.getMessage(currentTemp.toInt());
+      weatherMessage = weatherModel.getMessage(currentTemp);
     });
   }
 
@@ -91,7 +110,8 @@ class _CityResultPageState extends State<CityResultPage> {
                           height: double.infinity,
                           child: ElevatedButton(
                             onPressed: () async {
-                              updateUIData(await weatherModel.getWeatherData());
+                              updateUIData(await weatherModel
+                                  .getWeatherDataByLocation());
                             },
                             child: Icon(
                               Icons.near_me,
@@ -130,13 +150,19 @@ class _CityResultPageState extends State<CityResultPage> {
                           width: double.infinity,
                           height: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
+                            onPressed: () async {
+                              var cityName = await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => CitySelectionPage(),
                                 ),
                               );
+                              if (cityName != null) {
+                                await weatherModel
+                                    .getWeatherDataByCityName(cityName)
+                                    .then((dynamic weatherData) =>
+                                        updateUIData(weatherData));
+                              }
                             },
                             child: Icon(
                               Icons.location_city,
@@ -184,17 +210,23 @@ class _CityResultPageState extends State<CityResultPage> {
                 flex: 5,
                 child: TempWidgetMedium(
                   widgetTitle: 'Quick Insights',
-                  widgetContent: (locationDisabled == false)
+                  widgetContent: (locationDisabled == true)
                       ? Text(
-                          "It's $weatherIcon in $cityName\n$weatherMessage",
-                          textAlign: TextAlign.center,
-                          style: weatherInsightsTextStyle,
-                        )
-                      : Text(
                           "Unable to fetch weather data\nEnsure the GPS is on.",
                           textAlign: TextAlign.center,
                           style: weatherInsightsTextStyle,
-                        ),
+                        )
+                      : (wrongCityName == true)
+                          ? Text(
+                              "City name is unknown. Please try again.",
+                              textAlign: TextAlign.center,
+                              style: weatherInsightsTextStyle,
+                            )
+                          : Text(
+                              "It's $weatherIcon in $cityName\n$weatherMessage",
+                              textAlign: TextAlign.center,
+                              style: weatherInsightsTextStyle,
+                            ),
                 ),
               ),
             ],

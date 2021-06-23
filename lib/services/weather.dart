@@ -3,7 +3,7 @@ import 'package:weather_app/services/networking.dart';
 import 'package:weather_app/access/keys.dart';
 
 class WeatherModel {
-  Future<dynamic> getWeatherData() async {
+  Future<dynamic> getWeatherDataByLocation() async {
     Location location = Location();
     await location.getCurrentLocation();
     double? latitude = location.latitude;
@@ -19,6 +19,15 @@ class WeatherModel {
       'units': 'metric',
       'appid': weatherAPIKey
     });
+
+    Networking networking = Networking(apiURL: url);
+
+    return await networking.getWeatherData();
+  }
+
+  Future<dynamic> getWeatherDataByCityName(String cityName) async {
+    var url = Uri.https('api.openweathermap.org', '/data/2.5/weather',
+        {'q': cityName, 'units': 'metric', 'appid': weatherAPIKey});
 
     Networking networking = Networking(apiURL: url);
 
@@ -65,12 +74,18 @@ class WeatherModel {
     }
   }
 
-  String getMessage(int temp) {
-    if (temp > 25) {
+  String getMessage(double? temp) {
+    if (temp == null) {
+      return '';
+    }
+
+    int tempInt = temp.toInt();
+
+    if (tempInt > 25) {
       return 'It\'s 🍦 time';
-    } else if (temp > 20) {
+    } else if (tempInt > 20) {
       return 'Time for shorts and 👕';
-    } else if (temp < 10) {
+    } else if (tempInt < 10) {
       return 'You\'ll need 🧣 and 🧤';
     } else {
       return 'Bring a 🧥 just in case';

@@ -12,12 +12,12 @@ class MainTempWidgetLarge extends StatelessWidget {
     required this.maxTemp,
   });
 
-  final String cityName;
-  final String countryName;
-  final double currentTemp;
-  final double minTemp;
-  final double feelTemp;
-  final double maxTemp;
+  final String? cityName;
+  final String? countryName;
+  final double? currentTemp;
+  final double? minTemp;
+  final double? feelTemp;
+  final double? maxTemp;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class MainTempWidgetLarge extends StatelessWidget {
             children: <Widget>[
               Expanded(
                 flex: 1,
-                child: (cityName != '' && countryName != '')
+                child: (cityName != null && countryName != null)
                     ? Text(
                         '$cityName, $countryName',
                         style: locationTextStyle,
@@ -51,10 +51,15 @@ class MainTempWidgetLarge extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        '${currentTemp.toStringAsFixed(1)}',
-                        style: mainTempTextStyle,
-                      ),
+                      (currentTemp == null)
+                          ? Text(
+                              '0.0',
+                              style: mainTempTextStyle,
+                            )
+                          : Text(
+                              '${currentTemp?.toStringAsFixed(1)}',
+                              style: mainTempTextStyle,
+                            ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -88,15 +93,15 @@ class MainTempWidgetLarge extends StatelessWidget {
                     children: <Widget>[
                       SubTempWidget(
                         widgetName: 'Min',
-                        widgetValue: minTemp,
+                        widgetValue: minTemp ?? 0.0,
                       ),
                       SubTempWidget(
                         widgetName: 'Feels like',
-                        widgetValue: feelTemp,
+                        widgetValue: feelTemp ?? 0.0,
                       ),
                       SubTempWidget(
                         widgetName: 'Max',
-                        widgetValue: maxTemp,
+                        widgetValue: maxTemp ?? 0.0,
                       ),
                     ],
                   ),
@@ -120,13 +125,19 @@ class SubTempWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Text(
-          widgetName,
-          style: subTempNameTextStyle,
+        Expanded(
+          flex: 1,
+          child: Text(
+            widgetName,
+            style: subTempNameTextStyle,
+          ),
         ),
-        Text(
-          '${widgetValue.toStringAsFixed(1)}°C',
-          style: subTempValueTextStyle,
+        Expanded(
+          flex: 2,
+          child: Text(
+            '${widgetValue.toStringAsFixed(1)}°C',
+            style: subTempValueTextStyle,
+          ),
         ),
       ],
     );
